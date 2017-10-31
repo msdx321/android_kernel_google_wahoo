@@ -149,8 +149,20 @@ dtbs_install:
 Image-dtb Image.gz-dtb Image.lz4-dtb: vmlinux scripts dtbs
 	$(Q)$(MAKE) $(build)=$(boot) $(boot)/$@
 
-dtbo.img: $(boot)/dts/dtboimg.cfg dtbs
+ifneq ($(CONFIG_BOARD_TAIMEN),)
+dtbo.img: $(boot)/dts/dtboimg-taimen.cfg dtbs
 	$(Q)$(MAKE) $(build)=$(boot) $(boot)/$@
+endif
+
+ifneq ($(CONFIG_BOARD_MUSKIE),)
+dtbo.img: $(boot)/dts/dtboimg-muskie.cfg dtbs
+	$(Q)$(MAKE) $(build)=$(boot) $(boot)/$@
+endif
+
+ifneq ($(CONFIG_BOARD_WALLEYE),)
+dtbo.img: $(boot)/dts/dtboimg-walleye.cfg dtbs
+	$(Q)$(MAKE) $(build)=$(boot) $(boot)/$@
+endif
 
 PHONY += apply_dtbo
 dtboaply := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.dtboaply obj

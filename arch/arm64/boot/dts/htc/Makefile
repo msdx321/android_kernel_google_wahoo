@@ -1,6 +1,8 @@
 dtbo-$(CONFIG_BOARD_MUSKIE) += \
 	overlay-muskie-xa_xb_xc.dtbo \
-	overlay-muskie-xd_xe.dtbo \
+	overlay-muskie-xd_xe.dtbo
+
+dtbo-$(CONFIG_BOARD_WALLEYE) += \
 	overlay-walleye-xa_xb_xc.dtbo \
 	overlay-walleye-xd_xe_a.dtbo
 

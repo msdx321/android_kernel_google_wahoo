@@ -95,6 +95,11 @@ config BOARD_TAIMEN
 	depends on ARCH_QCOM
 	select ARCH_MSMCOBALT
 
+config BOARD_WALLEYE
+        bool "Enable Support for Walleye boards"
+	depends on ARCH_QCOM
+	select ARCH_MSMCOBALT
+
 config ARCH_MSMHAMSTER
 	bool "Enable Support for Qualcomm Technologies Inc MSMHAMSTER"
 	depends on ARCH_QCOM

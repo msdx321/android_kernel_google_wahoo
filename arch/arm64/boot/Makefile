@@ -52,8 +52,20 @@ $(obj)/Image.gz-dtb: $(obj)/Image.gz $(DTB_OBJS) FORCE
 $(obj)/Image.lz4-dtb: $(obj)/Image.lz4 $(DTB_OBJS) FORCE
 	$(call if_changed,cat)
 
-$(obj)/dtbo.img: $(obj)/dts/dtboimg.cfg $(DTBO_OBJS) FORCE
+ifneq ($(CONFIG_BOARD_TAIMEN),)
+$(obj)/dtbo.img: $(obj)/dts/dtboimg-taimen.cfg $(DTBO_OBJS) FORCE
 	$(call if_changed,mkdtimg,4096) # align dtbo.img to 4kB
+endif
+
+ifneq ($(CONFIG_BOARD_MUSKIE),)
+$(obj)/dtbo.img: $(obj)/dts/dtboimg-muskie.cfg $(DTBO_OBJS) FORCE
+	$(call if_changed,mkdtimg,4096) # align dtbo.img to 4kB
+endif
+
+ifneq ($(CONFIG_BOARD_WALLEYE),)
+$(obj)/dtbo.img: $(obj)/dts/dtboimg-walleye.cfg $(DTBO_OBJS) FORCE
+	$(call if_changed,mkdtimg,4096) # align dtbo.img to 4kB
+endif
 
 install: $(obj)/Image
 	$(CONFIG_SHELL) $(srctree)/$(src)/install.sh $(KERNELRELEASE) \
