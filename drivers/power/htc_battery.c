@@ -25,6 +25,16 @@
 #include <linux/rtc.h>
 #include <linux/wakelock.h>
 #include <linux/workqueue.h>
+#include <linux/moduleparam.h>
+
+static bool enable_custom_fcc_ma = false;
+module_param(enable_custom_fcc_ma, bool, 0644);
+
+static int custom_fcc_ma = 3300;
+module_param(custom_fcc_ma, int, 0644);
+
+static bool enable_ibat_adjust = true;
+module_param(enable_ibat_adjust, bool, 0644);
 
 #define HTC_BATT_NAME "htc_battery"
 
@@ -402,6 +412,12 @@ static int update_ibat_setting(void)
 	int batt_vol = htc_batt_info.rep.batt_vol;
 	int chg_type = htc_batt_info.rep.charging_source;
 	int ibat_ma = 0;
+	int temp_ma = 0;
+
+	if (enable_custom_fcc_ma)
+		temp_ma = custom_fcc_ma;
+	else
+		temp_ma = htc_batt_info.batt_fcc_ma;
 
 	/* Step 1: Update Health status*/
 	while (1) {
@@ -443,7 +459,7 @@ static int update_ibat_setting(void)
 	case POWER_SUPPLY_TYPE_USB_DCP:
 	case POWER_SUPPLY_TYPE_USB_PD:
 		if (ibat_map_ac[idx][batt_thermal] <= 100)
-			ibat_ma = htc_batt_info.batt_fcc_ma *
+			ibat_ma = temp_ma *
 					ibat_map_ac[idx][batt_thermal] / 100;
 		else
 			ibat_ma = ibat_map_ac[idx][batt_thermal];
@@ -466,6 +482,9 @@ static int update_ibat_setting(void)
 			thermal_limit_vol[batt_thermal], is_vol_limited,
 			is_screen_on, idx, ibat_ma);
 	}
+
+	if(!enable_ibat_adjust)
+		ibat_ma = temp_ma;
 
 	return ibat_ma * 1000;
 }
