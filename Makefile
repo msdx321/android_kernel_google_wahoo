@@ -343,6 +343,9 @@ export KBUILD_CHECKSRC KBUILD_SRC KBUILD_EXTMOD
 scripts/Kbuild.include: ;
 include scripts/Kbuild.include
 
+# Opt flags
+OPT_FLAGS := -mcpu=kryo -ffast-math -pipe -fomit-frame-pointer
+
 # Make variables (CC, etc...)
 AS		= $(CROSS_COMPILE)as
 LD		= $(CROSS_COMPILE)ld
@@ -371,9 +374,6 @@ CFLAGS_KERNEL	=
 AFLAGS_KERNEL	=
 CFLAGS_GCOV	= -fprofile-arcs -ftest-coverage -fno-tree-loop-im
 CFLAGS_KCOV	= -fsanitize-coverage=trace-pc
-
-# Opt flags
-OPT_FLAGS := -mcpu=kryo -mtune=kryo -ffast-math
 
 ifeq ($(cc-name),clang)
 ifneq ($(CROSS_COMPILE),)
