@@ -75,6 +75,7 @@
 #include <linux/binfmts.h>
 #include <linux/context_tracking.h>
 #include <linux/compiler.h>
+#include <linux/cpufreq.h>
 
 #include <asm/switch_to.h>
 #include <asm/tlb.h>
@@ -2198,10 +2199,15 @@ static void __sched_fork(unsigned long clone_flags, struct task_struct *p)
 	memset(&p->se.statistics, 0, sizeof(p->se.statistics));
 #endif
 
+#ifdef CONFIG_CPU_FREQ_STAT
+	cpufreq_task_stats_init(p);
+#endif
+
 	RB_CLEAR_NODE(&p->dl.rb_node);
 	init_dl_task_timer(&p->dl);
 	__dl_clear_params(p);
 
+	init_rt_schedtune_timer(&p->rt);
 	INIT_LIST_HEAD(&p->rt.run_list);
 
 #ifdef CONFIG_PREEMPT_NOTIFIERS

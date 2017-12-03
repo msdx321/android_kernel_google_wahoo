@@ -170,6 +170,7 @@ extern int nr_threads;
 DECLARE_PER_CPU(unsigned long, process_counts);
 extern int nr_processes(void);
 extern unsigned long nr_running(void);
+extern bool cpu_has_rt_task(int cpu);
 extern bool single_task_running(void);
 extern unsigned long nr_iowait(void);
 extern unsigned long nr_iowait_cpu(int cpu);
@@ -1454,6 +1455,10 @@ struct sched_rt_entity {
 	unsigned short on_rq;
 	unsigned short on_list;
 
+	/* Accesses for these must be guarded by rq->lock of the task's rq */
+	bool schedtune_enqueued;
+	struct hrtimer schedtune_timer;
+
 	struct sched_rt_entity *back;
 #ifdef CONFIG_RT_GROUP_SCHED
 	struct sched_rt_entity	*parent;
@@ -1717,6 +1722,8 @@ struct task_struct {
 
 	cputime_t utime, stime, utimescaled, stimescaled;
 	cputime_t gtime;
+	atomic64_t *time_in_state;
+	unsigned int max_state;
 	struct prev_cputime prev_cputime;
 #ifdef CONFIG_VIRT_CPU_ACCOUNTING_GEN
 	seqlock_t vtime_seqlock;
@@ -3093,7 +3100,7 @@ static inline int object_is_on_stack(void *obj)
 	return (obj >= stack) && (obj < (stack + THREAD_SIZE));
 }
 
-extern void thread_info_cache_init(void);
+extern void thread_stack_cache_init(void);
 
 #ifdef CONFIG_DEBUG_STACK_USAGE
 static inline unsigned long stack_not_used(struct task_struct *p)
