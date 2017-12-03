@@ -344,7 +344,7 @@ scripts/Kbuild.include: ;
 include scripts/Kbuild.include
 
 # Opt flags
-OPT_FLAGS := -mcpu=kryo -ffast-math -pipe -fomit-frame-pointer
+OPT_FLAGS := -ffast-math -pipe -fomit-frame-pointer
 
 # Make variables (CC, etc...)
 AS		= $(CROSS_COMPILE)as
