@@ -15,6 +15,7 @@
 #include <linux/kthread.h>
 #include <linux/slab.h>
 #include <trace/events/power.h>
+#include <linux/state_notifier.h>
 
 #include "sched.h"
 #include "tune.h"
@@ -33,7 +34,9 @@ struct sugov_tunables {
 	struct gov_attr_set attr_set;
 	unsigned int up_rate_limit_us;
 	unsigned int down_rate_limit_us;
+	unsigned int tipping_load;
 	bool iowait_boost_enable;
+	bool suspend_limit_enable;
 };
 
 struct sugov_policy {
@@ -179,10 +182,15 @@ static unsigned int get_next_freq(struct sugov_policy *sg_policy,
 				  unsigned long util, unsigned long max)
 {
 	struct cpufreq_policy *policy = sg_policy->policy;
+	bool suspend_limit = sg_policy->tunables->suspend_limit_enable;
+	unsigned int tipping_load = sg_policy->tunables->tipping_load;
 	unsigned int freq = arch_scale_freq_invariant() ?
 				policy->cpuinfo.max_freq : policy->cur;
 
-	freq = (freq + (freq >> 2)) * util / max;
+	freq = (100 / tipping_load) * freq * util / max;
+
+	if(state_suspended && suspend_limit)
+		freq = policy->cpuinfo.min_freq;
 
 	if (freq == sg_policy->cached_raw_freq && sg_policy->next_freq != UINT_MAX)
 		return sg_policy->next_freq;
@@ -509,6 +517,28 @@ static ssize_t down_rate_limit_us_store(struct gov_attr_set *attr_set,
 	return count;
 }
 
+static ssize_t tipping_load_show(struct gov_attr_set *attr_set, char *buf)
+{
+	struct sugov_tunables *tunables = to_sugov_tunables(attr_set);
+
+	return sprintf(buf, "%u\n", tunables->tipping_load);
+}
+
+static ssize_t tipping_load_store(struct gov_attr_set *attr_set,
+				      const char *buf, size_t count)
+{
+	struct sugov_tunables *tunables = to_sugov_tunables(attr_set);
+	struct sugov_policy *sg_policy;
+	unsigned int load;
+
+	if (kstrtouint(buf, 10, &load))
+		return -EINVAL;
+
+	tunables->tipping_load = load;
+
+	return count;
+}
+
 static ssize_t iowait_boost_enable_show(struct gov_attr_set *attr_set,
 					char *buf)
 {
@@ -531,14 +561,40 @@ static ssize_t iowait_boost_enable_store(struct gov_attr_set *attr_set,
 	return count;
 }
 
+static ssize_t suspend_limit_enable_show(struct gov_attr_set *attr_set,
+					char *buf)
+{
+	struct sugov_tunables *tunables = to_sugov_tunables(attr_set);
+
+	return sprintf(buf, "%u\n", tunables->suspend_limit_enable);
+}
+
+static ssize_t suspend_limit_enable_store(struct gov_attr_set *attr_set,
+					 const char *buf, size_t count)
+{
+	struct sugov_tunables *tunables = to_sugov_tunables(attr_set);
+	bool enable;
+
+	if (kstrtobool(buf, &enable))
+		return -EINVAL;
+
+	tunables->suspend_limit_enable = enable;
+
+	return count;
+}
+
 static struct governor_attr up_rate_limit_us = __ATTR_RW(up_rate_limit_us);
 static struct governor_attr down_rate_limit_us = __ATTR_RW(down_rate_limit_us);
+static struct governor_attr tipping_load = __ATTR_RW(tipping_load);
 static struct governor_attr iowait_boost_enable = __ATTR_RW(iowait_boost_enable);
+static struct governor_attr suspend_limit_enable = __ATTR_RW(suspend_limit_enable);
 
 static struct attribute *sugov_attributes[] = {
 	&up_rate_limit_us.attr,
 	&down_rate_limit_us.attr,
+	&tipping_load.attr,
 	&iowait_boost_enable.attr,
+	&suspend_limit_enable.attr,
 	NULL
 };
 
@@ -698,7 +754,13 @@ static int sugov_init(struct cpufreq_policy *policy)
                 }
 	}
 
+	tunables->tipping_load = 80;
+
 	tunables->iowait_boost_enable = policy->iowait_boost_enable;
+	if(policy->cpu > 3)
+		tunables->suspend_limit_enable = 1;
+	else
+		tunables->suspend_limit_enable = 0;
 
 	policy->governor_data = sg_policy;
 	sg_policy->tunables = tunables;
