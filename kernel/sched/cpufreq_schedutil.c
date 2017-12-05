@@ -757,10 +757,7 @@ static int sugov_init(struct cpufreq_policy *policy)
 	tunables->tipping_load = 80;
 
 	tunables->iowait_boost_enable = policy->iowait_boost_enable;
-	if(policy->cpu > 3)
-		tunables->suspend_limit_enable = 1;
-	else
-		tunables->suspend_limit_enable = 0;
+	tunables->suspend_limit_enable = 0;
 
 	policy->governor_data = sg_policy;
 	sg_policy->tunables = tunables;
