@@ -44,6 +44,7 @@ FUNC_PACK()
 	mkdir -p $TEMP_DIR
 	cp -r $AK2_DIR/* $TEMP_DIR
 	cp $BUILDING_DIR/arch/arm64/boot/Image.lz4-dtb $TEMP_DIR/zImage
+	cp $BUILDING_DIR/arch/arm64/boot/dtbo.img $TEMP_DIR/dtbo.img
 	cd $TEMP_DIR
 	zip -r9 mKernel.zip ./*
 	if [ "$TESTBUILD" = "test" ]; then
