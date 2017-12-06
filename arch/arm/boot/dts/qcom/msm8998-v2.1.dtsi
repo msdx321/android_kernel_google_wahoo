@@ -11,7 +11,6 @@
  */
 
 #include "msm8998-v2.dtsi"
-#include "dsi-panel-walleye-hbm.dtsi"
 
 / {
 	model = "Qualcomm Technologies, Inc. MSM8998 v2.1";
