@@ -344,7 +344,11 @@ scripts/Kbuild.include: ;
 include scripts/Kbuild.include
 
 # Opt flags
-OPT_FLAGS := -ffast-math -pipe -fomit-frame-pointer
+OPT_FLAGS := \
+	-ffast-math \
+	-fomit-frame-pointer \
+	-mllvm -polly \
+	-pipe
 
 # Make variables (CC, etc...)
 AS		= $(CROSS_COMPILE)as
