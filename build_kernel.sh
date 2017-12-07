@@ -12,7 +12,7 @@ JOB_NUMBER=`grep processor /proc/cpuinfo|wc -l`
 DATE=`date +%m-%d-%H:%M`
 
 CROSS_COMPILER=/home/msdx321/workspace/android/toolchains/linaro-4.9.4/bin/aarch64-linux-gnu-
-CC_COMPILER=/home/msdx321/workspace/android/toolchains/clang-4053586/bin/clang
+CC_COMPILER=/home/msdx321/workspace/android/toolchains/mClang/out/bin/clang
 
 AK2_DIR=$ROOT_DIR/ak2
 TEMP_DIR=$OUT_DIR/temp
