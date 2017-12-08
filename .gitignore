@@ -116,3 +116,4 @@ all.config
 # mKernel
 out/
 ak2/
+net/wireguard/
