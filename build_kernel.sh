@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export ARCH=arm64
-export SUBVER="R2.1"
+export SUBVER="R3"
 export LOCALVERSION="-mKernel-$SUBVER"
 
 ROOT_DIR=$(pwd)
