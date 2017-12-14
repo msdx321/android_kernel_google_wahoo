@@ -151,10 +151,15 @@ __setup("androidboot.hardware=", get_model);
 
 static bool is_suspended(void)
 {
+	/*
 	if (hw_version == WALLEYE)
 		return scr_suspended();
 	else
 		return scr_suspended_taimen();
+	*/
+
+	// mKernel is only for walleye
+	return scr_suspended();
 }
 
 /* Wake Gestures */
