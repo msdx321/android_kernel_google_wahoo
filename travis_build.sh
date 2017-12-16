@@ -11,15 +11,13 @@ BUILDING_DIR=$OUT_DIR/kernel_obj
 JOB_NUMBER=`grep processor /proc/cpuinfo|wc -l`
 DATE=`date +%m-%d-%H:%M`
 
-CROSS_COMPILER=/home/msdx321/workspace/android/toolchains/linaro-4.9.4/bin/aarch64-linux-gnu-
-CC_COMPILER=/home/msdx321/workspace/android/toolchains/mClang/out/bin/clang
+CROSS_COMPILER=$ROOT_DIR/toolchains/linaro-gcc/bin/aarch64-linux-gnu-
+CC_COMPILER=$ROOT_DIR/toolchains/clang/bin/clang
 
 AK2_DIR=$ROOT_DIR/misc/ak2
 TEMP_DIR=$OUT_DIR/temp
 
 export PATH=$PATH:$ROOT_DIR/misc/bin
-
-TESTBUILD=$1
 
 FUNC_PRINT()
 {
@@ -35,7 +33,11 @@ FUNC_COMPILE_KERNEL()
 	FUNC_PRINT "Start Compiling Kernel"
 	make -C $ROOT_DIR O=$BUILDING_DIR mrproper -j$JOB_NUMBER
 	make -C $ROOT_DIR O=$BUILDING_DIR mKernel_defconfig
-	make -C $ROOT_DIR O=$BUILDING_DIR -j$JOB_NUMBER ARCH=arm64 CROSS_COMPILE=$CROSS_COMPILER CC="ccache $CC_COMPILER" HOSTCC=clang
+	make -C $ROOT_DIR O=$BUILDING_DIR -j$JOB_NUMBER ARCH=arm64 CROSS_COMPILE=$CROSS_COMPILER CC=$CC_COMPILER
+	if [ ! -f "out/kernel_obj/arch/arm64/boot" ]; then
+		FUNC_PRINT "ERROR"
+		exit 1
+	fi
 	FUNC_PRINT "Finish Compiling Kernel"
 }
 
@@ -49,18 +51,14 @@ FUNC_PACK()
 	cp $BUILDING_DIR/arch/arm64/boot/dtbo.img $TEMP_DIR/dtbo.img
 	cd $TEMP_DIR
 	zip -r9 mKernel.zip ./*
-	if [ "$TESTBUILD" = "test" ]; then
-		mv mKernel.zip $OUT_DIR/mKernel-$DATE.zip
-	else
-		mv mKernel.zip $OUT_DIR/mKernel-$SUBVER.zip
-	fi
+	mv mKernel.zip $OUT_DIR/mKernel-$DATE.zip
 	cd $ROOT_DIR
 	FUNC_PRINT "Finish Packing"
 }
 
 START_TIME=`date +%s`
 FUNC_COMPILE_KERNEL
-FUNC_PACK
+#FUNC_PACK
 END_TIME=`date +%s`
 
 let "ELAPSED_TIME=$END_TIME-$START_TIME"

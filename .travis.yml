@@ -1,0 +1,16 @@
+language: c
+
+sudo: required
+dist: trusty
+
+before_install:
+    - sudo apt-get install -y liblz4-1
+
+script: 
+    - git clone https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86 -b oreo-mr1-release --depth 1 toolchains/google-clang
+    - mv toolchains/google-clang/clang-4053586 toolchains/clang
+    - wget -O toolchains/linaro-gcc.tar.xz https://releases.linaro.org/components/toolchain/binaries/4.9-2017.01/aarch64-linux-gnu/gcc-linaro-4.9.4-2017.01-x86_64_aarch64-linux-gnu.tar.xz
+    - tar -Jxf toolchains/linaro-gcc.tar.xz -C toolchains
+    - mv toolchains/gcc-linaro-4.9.4-2017.01-x86_64_aarch64-linux-gnu toolchains/linaro-gcc
+    - git clone https://github.com/msdx321/kernel-misc.git -b walleye --depth 1 misc
+    - sh ./travis_build.sh

@@ -347,7 +347,6 @@ include scripts/Kbuild.include
 OPT_FLAGS := \
 	-ffast-math \
 	-fomit-frame-pointer \
-	-mllvm -polly \
 	-pipe
 
 # Make variables (CC, etc...)

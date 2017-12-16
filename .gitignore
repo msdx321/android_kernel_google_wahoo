@@ -115,5 +115,9 @@ all.config
 
 # mKernel
 out/
-ak2/
+misc/
 net/wireguard/
+
+# Toolchains
+toolchains/
+
