@@ -34,7 +34,7 @@ FUNC_COMPILE_KERNEL()
 	make -C $ROOT_DIR O=$BUILDING_DIR mrproper -j$JOB_NUMBER
 	make -C $ROOT_DIR O=$BUILDING_DIR mKernel_defconfig
 	make -C $ROOT_DIR O=$BUILDING_DIR -j$JOB_NUMBER ARCH=arm64 CROSS_COMPILE=$CROSS_COMPILER CC=$CC_COMPILER
-	if [ ! -f "out/kernel_obj/arch/arm64/boot" ]; then
+	if [ ! -f "out/kernel_obj/arch/arm64/boot/Image.lz4-dtb" ]; then
 		FUNC_PRINT "ERROR"
 		exit 1
 	fi
