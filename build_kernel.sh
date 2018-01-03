@@ -11,8 +11,8 @@ BUILDING_DIR=$OUT_DIR/kernel_obj
 JOB_NUMBER=`grep processor /proc/cpuinfo|wc -l`
 DATE=`date +%m-%d-%H:%M`
 
-CROSS_COMPILER=/home/msdx321/workspace/android/toolchains/linaro-4.9.4/bin/aarch64-linux-gnu-
-CC_COMPILER=/home/msdx321/workspace/android/toolchains/mClang/out/bin/clang
+CROSS_COMPILER=$ROOT_DIR/toolchains/linaro-gcc/bin/aarch64-linux-gnu-
+CC_COMPILER=$ROOT_DIR/toolchains/clang/bin/clang
 
 AK2_DIR=$ROOT_DIR/misc/ak2
 TEMP_DIR=$OUT_DIR/temp
