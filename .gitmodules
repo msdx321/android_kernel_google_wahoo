@@ -10,3 +10,7 @@
 	path = toolchains/google-clang
 	url = https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86
 	branch = oreo-mr1-release
+[submodule "toolchains/linaro-gcc"]
+	path = toolchains/linaro-gcc
+	url = https://github.com/msdx321/linaro-gcc.git
+	branch = 7.2.1-aarch64
