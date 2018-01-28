@@ -1,0 +1,4 @@
+[submodule "misc/ak2"]
+	path = misc/ak2
+	url = https://github.com/msdx321/AnyKernel2.git
+	branch = walleye
