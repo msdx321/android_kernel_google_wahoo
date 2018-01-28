@@ -112,3 +112,12 @@ all.config
 
 # Kdevelop4
 *.kdev4
+
+# Prebuilt toolchains
+toolchains/
+
+# mKernel files
+out/
+
+# Wireguard things
+net/wireguard/
