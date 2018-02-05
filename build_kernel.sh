@@ -42,7 +42,7 @@ FUNC_COMPILE_KERNEL()
     fi
 
 	make -C $ROOT_DIR O=$BUILDING_DIR mrproper -j$JOB_NUMBER
-	make -C $ROOT_DIR O=$BUILDING_DIR wahoo_defconfig
+	make -C $ROOT_DIR O=$BUILDING_DIR mKernel_walleye_defconfig
 	make -C $ROOT_DIR O=$BUILDING_DIR -j$JOB_NUMBER CROSS_COMPILE=$CROSS_COMPILER CC="ccache $CC_COMPILER" HOSTCC=clang
 
 	FUNC_PRINT "Finish Compiling Kernel"
