@@ -45,6 +45,11 @@ FUNC_COMPILE_KERNEL()
 	make -C $ROOT_DIR O=$BUILDING_DIR mKernel_walleye_defconfig
 	make -C $ROOT_DIR O=$BUILDING_DIR -j$JOB_NUMBER CROSS_COMPILE=$CROSS_COMPILER CC="ccache $CC_COMPILER" HOSTCC=clang
 
+    if [ ! -f "out/kernel_obj/arch/arm64/boot/Image.lz4-dtb" ]; then
+        FUNC_PRINT "ERROR"
+        exit 1
+    fi
+
 	FUNC_PRINT "Finish Compiling Kernel"
 }
 
