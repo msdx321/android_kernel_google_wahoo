@@ -408,12 +408,19 @@ LINUXINCLUDE    := \
 
 KBUILD_CPPFLAGS := -D__KERNEL__ $(CLANG_FLAGS)
 
+OPT_FLAGS := \
+		-ffast-math \
+		-fomit-frame-pointer \
+		-pipe \
+		$(call cc-option,-mcpu=cortex-a73+crypto+crc,) \
+		$(call cc-option,-mllvm -polly,)
+
 KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fno-strict-aliasing -fno-common \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security \
 		   -Wno-unused-function \
-		   -std=gnu89 $(CLANG_FLAGS)
+		   -std=gnu89 $(CLANG_FLAGS) $(OPT_FLAGS)
 
 KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL :=
