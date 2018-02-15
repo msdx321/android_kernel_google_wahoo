@@ -14,7 +14,7 @@ TESTBUILD=$1
 
 
 CROSS_COMPILER=$ROOT_DIR/toolchains/linaro-gcc/bin/aarch64-linux-gnu-
-CC_COMPILER=$ROOT_DIR/toolchains/google-clang/clang-stable/bin/clang
+CC_COMPILER=/home/msdx321/workspace/android/toolchains/dtc/out/5.0/bin/clang
 
 export ARCH=arm64
 
