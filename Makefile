@@ -412,8 +412,14 @@ OPT_FLAGS := \
 		-ffast-math \
 		-fomit-frame-pointer \
 		-pipe \
-		$(call cc-option,-mcpu=cortex-a73+crypto+crc,) \
-		$(call cc-option,-mllvm -polly,)
+		-mcpu=cortex-a73+crypto+crc \
+		-mllvm -polly \
+		-mllvm -polly-run-dce \
+		-mllvm -polly-run-inliner \
+		-mllvm -polly-opt-fusion=max \
+		-mllvm -polly-ast-use-context \
+		-mllvm -polly-detect-keep-going \
+		-mllvm -polly-vectorizer=stripmine
 
 KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fno-strict-aliasing -fno-common \
