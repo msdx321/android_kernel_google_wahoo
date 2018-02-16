@@ -21,6 +21,7 @@ export ARCH=arm64
 export PATH=$PATH:$ROOT_DIR/misc/bin
 
 export SUBVER="R6"
+export COMPILER_NAME="DragonTC 5.0"
 
 FUNC_PRINT()
 {
