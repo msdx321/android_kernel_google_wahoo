@@ -13,12 +13,12 @@ qcom,walleye-unknown-batterydata {
 	 */
 	qcom,fastchg-current-ma = <500>;
 	qcom,fg-cc-cv-threshold-mv = <4390>;
-	qcom,fcc-mah = <2700>;
+	qcom,fcc-mah = <3830>;
 	qcom,batt-thermal-limit-vol = <4200>;
 	htc,batt_id = <255>;
 	htc,id_raw_min = <200001>;
 	htc,id_raw_max = <450000>;
-	htc,fastchg-current-ma = <2700>;
+	htc,fastchg-current-ma = <3825>;
 	qcom,fg-profile-data = [
 		 6E 1F B0 05
 		 74 0A 9B FC
