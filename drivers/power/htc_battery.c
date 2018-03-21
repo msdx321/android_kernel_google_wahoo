@@ -24,6 +24,7 @@
 #include <linux/rtc.h>
 #include <linux/wakelock.h>
 #include <linux/workqueue.h>
+#include <linux/state_notifier.h>
 
 #define HTC_BATT_NAME "htc_battery"
 
@@ -503,6 +504,7 @@ static int fb_notifier_callback(struct notifier_block *self,
 			htc_batt_info.state &= ~STATE_SCREEN_OFF;
 			BATT_LOG("%s-> display is On", __func__);
 			htc_batt_schedule_batt_info_update();
+			state_resume();
 			break;
 		case FB_BLANK_POWERDOWN:
 		case FB_BLANK_HSYNC_SUSPEND:
@@ -511,6 +513,7 @@ static int fb_notifier_callback(struct notifier_block *self,
 			htc_batt_info.state |= STATE_SCREEN_OFF;
 			BATT_LOG("%s-> display is Off", __func__);
 			htc_batt_schedule_batt_info_update();
+			state_suspend();
 			break;
 		}
 	}
