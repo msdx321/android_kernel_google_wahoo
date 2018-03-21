@@ -184,7 +184,7 @@ static unsigned int get_next_freq(struct sugov_policy *sg_policy,
 
 	freq = (freq + (freq >> 2)) * util / max;
 
-	if (state_suspended && policy->cpu > 3)
+	if (state_suspended && policy->cpu > 1)
 		freq = policy->cpuinfo.min_freq;
 
 	if (freq == sg_policy->cached_raw_freq && sg_policy->next_freq != UINT_MAX)
