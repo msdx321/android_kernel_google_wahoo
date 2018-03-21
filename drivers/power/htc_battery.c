@@ -42,6 +42,9 @@ module_param_named(
 	full_level_dis_chg, full_level_dis_chg, int, S_IRUSR | S_IWUSR
 );
 
+static bool no_limit = false;
+module_param_named(no_limit, no_limit, bool, S_IRUSR | S_IWUSR);
+
 #define BATT_LOG(x...) pr_info("[BATT] " x)
 
 #define BATT_DEBUG(x...) do { \
@@ -407,6 +410,9 @@ static int update_ibat_setting(void)
 	int batt_vol = htc_batt_info.rep.batt_vol;
 	int chg_type = htc_batt_info.rep.charging_source;
 	int ibat_ma = 0;
+
+        if (no_limit)
+                return htc_batt_info.batt_fcc_ma * 1000;
 
 	/* Step 1: Update Health status*/
 	while (1) {
