@@ -15,6 +15,7 @@
 #include <linux/kthread.h>
 #include <linux/slab.h>
 #include <trace/events/power.h>
+#include <linux/state_notifier.h>
 
 #include "sched.h"
 #include "tune.h"
@@ -182,6 +183,9 @@ static unsigned int get_next_freq(struct sugov_policy *sg_policy,
 				policy->cpuinfo.max_freq : policy->cur;
 
 	freq = (freq + (freq >> 2)) * util / max;
+
+	if (state_suspended && policy->cpu > 3)
+		freq = policy->cpuinfo.min_freq;
 
 	if (freq == sg_policy->cached_raw_freq && sg_policy->next_freq != UINT_MAX)
 		return sg_policy->next_freq;
