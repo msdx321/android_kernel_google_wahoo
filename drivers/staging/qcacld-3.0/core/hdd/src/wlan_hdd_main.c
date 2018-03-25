@@ -5442,6 +5442,7 @@ out:
 	return ret;
 }
 
+#ifdef WLAN_FEATURE_HOLD_RX_WAKELOCK
 /**
  * hdd_rx_wake_lock_destroy() - Destroy RX wakelock
  * @hdd_ctx:	HDD context.
@@ -5467,6 +5468,10 @@ static void hdd_rx_wake_lock_create(hdd_context_t *hdd_ctx)
 {
 	qdf_wake_lock_create(&hdd_ctx->rx_wake_lock, "qcom_rx_wakelock");
 }
+#else
+static void hdd_rx_wake_lock_destroy(hdd_context_t *hdd_ctx) { }
+static void hdd_rx_wake_lock_create(hdd_context_t *hdd_ctx) { }
+#endif
 
 /**
  * hdd_roc_context_init() - Init ROC context
